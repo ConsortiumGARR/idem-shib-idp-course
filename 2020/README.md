@@ -14,7 +14,9 @@
                     ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                     Version="2.0"
                     >
-    <saml:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">https://sp-fqdn/saml2/metadata/</saml:Issuer>
+    <saml:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">
+      https://sp-fqdn/saml2/metadata/
+    </saml:Issuer>
     <ds:Signature Id="Signature1">
         <ds:SignedInfo>
             <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
