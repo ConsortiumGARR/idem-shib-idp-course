@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+
+       default-init-method="initialize"
+       default-destroy-method="destroy">
+
+    <!-- Use this file to define any custom beans needed globally. -->
+
+    <bean id="MyRDBMs1" class="org.apache.commons.dbcp.BasicDataSource"
+      p:driverClassName="org.mariadb.jdbc.Driver"
+      p:url="jdbc:mariadb://localhost:3306/{{ idp_rdbms_dbname }}?autoReconnect=true"
+      p:username="{{ idp_rdbms_user }}"
+      p:password="{{ idp_rdbms_pw }}"
+      p:maxActive="10"
+      p:maxIdle="5"
+      p:maxWait="15000"
+      p:testOnBorrow="true"
+      p:validationQuery="select 1"
+      p:validationQueryTimeout="5" />
+
+    <bean id="shibboleth.JPAStorageService" class="org.opensaml.storage.impl.JPAStorageService"
+      p:cleanupInterval="%{idp.storage.cleanupInterval:PT10M}"
+      c:factory-ref="shibboleth.JPAStorageService.entityManagerFactory"/>
+
+    <bean id="shibboleth.JPAStorageService.entityManagerFactory"
+      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="packagesToScan" value="org.opensaml.storage.impl"/>
+      <property name="dataSource" ref="MyRDBMs1"/>
+      <property name="jpaVendorAdapter" ref="shibboleth.JPAStorageService.JPAVendorAdapter"/>
+      <property name="jpaDialect">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+      </property>
+    </bean>
+
+    <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
+      class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+      <property name="database" value="MYSQL" />
+    </bean>
+
+</beans>
