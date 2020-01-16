@@ -1,36 +1,42 @@
-# Corso IDEM su Shibboleth Identity Provider del 22 Gennaio 2020
+# Esempi SAML2
 
-## Docenti
-* Giuseppe De Marco (giuseppe.demarco@unical.it)
-* Marco Malavolti (marco.malavolti@garr.it)
-* Maurizio Festi (qui-email)
 
-## Playbook setup
-
+#### Authn Request
 ````
-sudo apt update
-sudo apt upgrade -y
-sudo apt install -y python3-dev python3-setuptools python3-pip easy-rsa expect-dev git
-sudo pip3 install ansible
-git clone https://github.com/ConsortiumGARR/ansible-slapd-eduperson2016.git
-cd ansible-slapd-eduperson2016/
-sudo ansible-playbook -i "localhost," -c local playbook.yml
-cd ..
-apt install -y python3-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev zlib1g-dev ldap-utils
-git clone https://github.com/ConsortiumGARR/Ansible-Shibboleth-IDP-SP-Debian.git
-cd Ansible-Shibboleth-IDP-SP-Debian/
-ansible-playbook -i "localhost," -c local playbook.yml
+<samlp:AuthnRequest xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                    AssertionConsumerServiceURL="https://peo.unical.it/saml2/acs/"
+                    Destination="https://idp.unical.it/idp/profile/SAML2/POST/SSO"
+                    ForceAuthn="true"
+                    ID="id-3psTfaaeUPm9D9P6I"
+                    IssueInstant="2020-01-16T11:00:32Z"
+                    ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                    Version="2.0"
+                    >
+    <saml:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">https://sp-fqdn/saml2/metadata/</saml:Issuer>
+    <ds:Signature Id="Signature1">
+        <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <ds:Reference URI="#id-3psTfaaeUPm9D9P6I">
+                <ds:Transforms>
+                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <ds:DigestValue>TX17iYsk2wSV+tTSF2mL5XIk7LQ=</ds:DigestValue>
+            </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>jnTz7IWSA[...]</ds:SignatureValue>
+        <ds:KeyInfo>
+            <ds:X509Data>
+                <ds:X509Certificate>MIIDPjCCAiYCCQCfoizEvowHTDANBgkqhkiG[...]</ds:X509Certificate>
+            </ds:X509Data>
+        </ds:KeyInfo>
+    </ds:Signature>
+    <samlp:NameIDPolicy AllowCreate="true"
+                        Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
+                        />
+</samlp:AuthnRequest>
 ````
-
-Test 
-````
-export JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto/jre
-/opt/shibboleth-idp/bin/aacli.sh   -n luigi -r  https://coco.release-check.edugain.org/shibboleth --saml2
-````
-
-## Presentazioni
-
-* Prima Parte
-* Seconda Parte
-* Terza Parte
-* Quarta Parte
