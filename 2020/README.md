@@ -9,8 +9,8 @@
 
 ````
 sudo apt update
-sudo apt upgrade
-sudo apt install python3-dev python3-setuptools python3-pip easy-rsa expect-dev git
+sudo apt upgrade -y
+sudo apt install -y python3-dev python3-setuptools python3-pip easy-rsa expect-dev git
 sudo pip3 install ansible
 git clone https://github.com/ConsortiumGARR/ansible-slapd-eduperson2016.git
 cd ansible-slapd-eduperson2016/
