@@ -25,6 +25,7 @@ ansible-playbook -i "localhost," -c local playbook.yml
 #### Test
 ````
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto/jre
+/opt/shibboleth-idp/bin/aacli.sh   -n luigi -r  https://shib-sp.aai-test.garr.it/shibboleth
 /opt/shibboleth-idp/bin/aacli.sh   -n luigi -r  https://coco.release-check.edugain.org/shibboleth --saml2
 ````
 # Esempi SAML2
