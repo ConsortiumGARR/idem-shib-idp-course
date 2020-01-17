@@ -59,7 +59,6 @@
         <AttributeEncoder xsi:type="SAML2String" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.1" friendlyName="eduPersonAffiliation" encodeType="false"/>
     </AttributeDefinition>
 
-
     <!-- SCRIPTED: Aggiungere un valore a eduPersonEntitlement per tutti gli affiliati di tipo 'staff' -->
     <AttributeDefinition xsi:type="ScriptedAttribute" id="eduPersonEntitlement">
         <DisplayName xml:lang="en">Entitlement</DisplayName>
@@ -94,6 +93,17 @@
            ]]>
         </Script>
         <AttributeEncoder xsi:type="SAML2String" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" friendlyName="eduPersonEntitlement" encodeType="false" />
+    </AttributeDefinition>
+
+    <!-- Scoped: Valorizzare un attributo come il risultato dell'unione di un attributo a uno scope -->
+    <!-- idp.scope: è una proprietà valorizzata in idp.properties -->
+    <AttributeDefinition scope="%{idp.scope}" xsi:type="Scoped" id="eduPersonScopedAffiliation">
+        <InputAttributeDefinition ref="eduPersonAffiliation" />
+        <DisplayName xml:lang="en">Scoped Affiliation</DisplayName>
+        <DisplayName xml:lang="it">Affiliazione con ambito</DisplayName>
+        <DisplayDescription xml:lang="en">Affiliation Scoped: Type of affiliation with Home Organization with scope</DisplayDescription>
+        <DisplayDescription xml:lang="it">Affiliazione con ambito: ruolo ricoperto con dominio dell'Organizzazione</DisplayDescription>
+        <AttributeEncoder xsi:type="SAML2ScopedString" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.9" friendlyName="eduPersonScopedAffiliation" encodeType="false" />
     </AttributeDefinition>
 
 </AttributeResolver>
