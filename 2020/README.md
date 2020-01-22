@@ -4,7 +4,7 @@ Corso IDEM su Shibboleth Identity Provider del 22 Gennaio 2020
 #### Docenti
 - Giuseppe De Marco (giuseppe.demarco@unical.it)
 - Marco Malavolti (marco.malavolti@garr.it)
-- Maurizio Festi (qui-email)
+- Maurizio Festi (maurizio.festi@unitn.it)
 
 #### Playbook setup
 ````
