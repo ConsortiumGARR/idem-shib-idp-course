@@ -9,7 +9,7 @@
 9) `FLUSH PRIVILEGES;`
 
 per ottenere:
-
+<pre>
 +----+-------+----------------+
 | pk | uid   | ruolo          |
 +----+-------+----------------+
@@ -17,8 +17,9 @@ per ottenere:
 |  2 | pino  | amministrativo |
 |  3 | gino  | docente        |
 +----+-------+----------------+
+</pre>
 
-10) Add the following "<bean>" to "global.xml" to be able to use your customDB:
+10) Add the following "`<bean>`" to "`global.xml`" to be able to use your customDB:
 
     * `vim /opt/shibboleth-idp/conf/global.xml`
     
@@ -37,7 +38,7 @@ per ottenere:
             p:validationQueryTimeout="5" />
       ```
 
-11) Add the <AttributeDefinition> and the <DataConnector> needed into the attribute-resolver.xml:
+11) Add the `<AttributeDefinition>` and the `<DataConnector>` needed into the attribute-resolver.xml:
 
     * `vim /opt/shibboleth-idp/conf/attribute-resolver.xml`
     
