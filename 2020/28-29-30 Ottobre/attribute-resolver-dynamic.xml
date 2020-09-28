@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AttributeResolver
+        xmlns="urn:mace:shibboleth:2.0:resolver"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd">
+
+    <!-- ========================================== -->
+    <!--      Attribute Definitions                 -->
+    <!-- ========================================== -->
+
+    <!-- TEMPLATE: Restituire un displayName personalizzato sulla base di nome e cognome -->
+    <AttributeDefinition xsi:type="Template" id="displayName">
+        <InputDataConnector ref="myLDAP" attributeNames="sn givenName" />
+        <Template>
+            <![CDATA[
+                ${sn} ${givenName}
+            ]]>
+        </Template>
+    </AttributeDefinition>
+
+    <!-- MAPPED: Assegnare un'affiliazione ai diversi utenti dell'istituzione -->
+    <AttributeDefinition id="eduPersonAffiliation" xsi:type="Mapped">
+        <InputDataConnector ref="myLDAP" attributeNames="title" />
+        <DefaultValue passThru="true">affiliate</DefaultValue>
+        <ValueMap>
+            <ReturnValue>student</ReturnValue>
+            <SourceValue>studente</SourceValue>
+            <SourceValue>dottorando</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>member</ReturnValue>
+            <SourceValue>studente</SourceValue>
+            <SourceValue>dottorando</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>affiliate</ReturnValue>
+            <SourceValue>ospite</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>staff</ReturnValue>
+            <SourceValue>dottorando</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>staff</ReturnValue>
+            <SourceValue>dirigente</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>some_string_to_add_before_value:$1</ReturnValue>
+            <SourceValue>(.+)</SourceValue>
+        </ValueMap>
+    </AttributeDefinition>
+
+    <!-- SCRIPTED: Aggiungere un valore a eduPersonEntitlement per tutti gli affiliati di tipo 'staff' -->
+    <AttributeDefinition xsi:type="ScriptedAttribute" id="eduPersonEntitlement">
+        <InputDataConnector ref="myLDAP" attributeNames="eduPersonEntitlement eduPersonAffiliation" />
+        <Script>
+           <![CDATA[
+               logger = Java.type("org.slf4j.LoggerFactory").getLogger("net.shibboleth.idp.attribute.resolver.epebuilder");
+               if (typeof eduPersonEntitlement == "undefined" || eduPersonEntitlement.getValues().size() < 1) {
+                  logger.info("No ePE in LDAP found, creating one");
+                  for (i = 0; i < eduPersonAffiliation.getValues().size(); i++){
+                     affiliation = eduPersonAffiliation.getValues().get(i);
+                     if (affiliation == 'staff') {
+                        eduPersonEntitlement.addValue('urn:mace:dir:entitlement:common-lib-terms');
+                     }
+                  }
+               } else {
+                    logger.info("ePE has " + eduPersonEntitlement.getValues().size() + " values");
+                    for (i = 0; i < eduPersonAffiliation.getValues().size(); i++){
+                       affiliation = eduPersonAffiliation.getValues().get(i);
+                       if (affiliation == 'staff') {
+                          eduPersonEntitlement.addValue('urn:mace:dir:entitlement:common-lib-terms');
+                       }
+                    }
+               }
+               for (i = 0; i < eduPersonEntitlement.getValues().size(); i++){
+                  logger.info("ePE value "+i+": " + eduPersonEntitlement.getValues().get(i));
+               }
+           ]]>
+        </Script>
+    </AttributeDefinition>
+
+    <!-- Scoped: Valorizzare un attributo come il risultato dell'unione di un attributo a uno scope -->
+    <!-- idp.scope: è una proprietà valorizzata in idp.properties -->
+    <AttributeDefinition scope="%{idp.scope}" xsi:type="Scoped" id="eduPersonScopedAffiliation">
+        <InputDataConnector ref="myLDAP" attributeNames="eduPersonAffiliation" />
+    </AttributeDefinition>
+
+</AttributeResolver>
