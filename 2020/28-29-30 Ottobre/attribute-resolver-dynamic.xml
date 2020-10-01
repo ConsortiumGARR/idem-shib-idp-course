@@ -81,6 +81,65 @@
         </Script>
     </AttributeDefinition>
 
+    <!-- SCRIPTED: Generare 'displayName' come valore preso da 'cn' (commonName) or givenName + sn (surname) con log -->
+    <AttributeDefinition xsi:type="ScriptedAttribute" id="displayName">
+        <InputDataConnector ref="myLDAP" attributeNames="displayName cn givenName sn" />
+        <Script>
+           <![CDATA[
+             logger = Java.type("org.slf4j.LoggerFactory").getLogger("net.shibboleth.idp.attribute.resolver.displayNameBuilder");
+             valueType =  Java.type("net.shibboleth.idp.attribute.StringAttributeValue");
+
+             // This implementation composes the value of the attribute displayName
+             // from the values of the attributes 'cn' or 'givenName' + 'sn'
+
+             // check existance of commonName attribute and use it to generate displayName attribute
+             if (cn != null && cn.getValues().size() > 0) {
+                commonName = cn.getValues().get(0);
+             } else {
+                commonName = null;
+             }
+
+             // compose value from givenName and surname
+
+             // check whether givenName and surname exist
+             if (givenName != null && givenName.getValues().size() > 0) {
+                gn = givenName.getValues().get(0);
+             } else {
+                gn = null;
+             }
+             if (sn != null && sn.getValues().size() > 0) {
+                surname = sn.getValues().get(0);
+             } else {
+                surname = null;
+             }
+
+             if (typeof displayName == 'undefined' || displayName.getValues().size() < 1) {
+                logger.info("No displayName in LDAP found, creating one");
+
+                if (commonName != null) {
+                   displayName.addValue(new valueType(commonName));
+                   logger.info('displayName final value: ' + displayName.getValues().get(0));
+
+                } else if (surname != null && gn != null) {
+                   displayName.addValue(new valueType(gn + ' ' + surname));
+                   logger.info('displayName final value: ' + displayName.getValues().get(0));
+
+                } else if (surname != null) {
+                   displayName.addValue(new valueType(surname));
+                   logger.info('displayName final value: ' + displayName.getValues().get(0));
+
+                } else if (gn != null) {
+                   displayName.addValue(new valueType(gn));
+                   logger.info('displayName final value: ' + displayName.getValues().get(0));
+                }
+
+             } else {
+                logger.info('displayName had value: ' + displayName.getValues().get(0));
+             }
+            ]]>
+        </Script>
+    </AttributeDefinition>
+
     <!-- Scoped: Valorizzare un attributo come il risultato dell'unione di un attributo a uno scope -->
     <!-- idp.scope: è una proprietà valorizzata in idp.properties -->
     <AttributeDefinition scope="%{idp.scope}" xsi:type="Scoped" id="eduPersonScopedAffiliation">
