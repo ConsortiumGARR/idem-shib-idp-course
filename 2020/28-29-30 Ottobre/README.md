@@ -47,7 +47,7 @@ per ottenere:
 
       <!--  AttributeDefinition for the attribute title  -->
 
-      <AttributeDefinition xsi:type="Simple" id="title">
+      <AttributeDefinition xsi:type="Simple" id="role">
          <InputDataConnector ref="myDB" attributeNames="userRole" />
       </AttributeDefinition>
 
@@ -91,4 +91,12 @@ per ottenere:
     <AttributeRule attributeID="role">
        <PermitValueRule xsi:type="AttributeInMetadata" onlyIfRequired="true" />
     </AttributeRule>
+    ```
+
+14) The custom attribute is released:
+
+    ```xml
+    <saml2:Attribute FriendlyName="role" Name="urn:oid:1.2.3.4.5.6.789.10.11.12.13" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+       <saml2:AttributeValue xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xsd:string">docente</saml2:AttributeValue>
+    </saml2:Attribute>
     ```
