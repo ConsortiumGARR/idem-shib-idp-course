@@ -66,7 +66,7 @@ per ottenere:
             ]]>
             </QueryTemplate>
          <Column columnName="ruolo" attributeID="userRole" />
-     </DataConnector>
+      </DataConnector>
       ```
  
 12) Create the custom attribute with:
