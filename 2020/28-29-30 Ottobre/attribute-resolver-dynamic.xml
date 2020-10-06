@@ -87,7 +87,6 @@
         <Script>
            <![CDATA[
              logger = Java.type("org.slf4j.LoggerFactory").getLogger("net.shibboleth.idp.attribute.resolver.displayNameBuilder");
-             valueType =  Java.type("net.shibboleth.idp.attribute.StringAttributeValue");
 
              // This implementation composes the value of the attribute displayName
              // from the values of the attributes 'cn' or 'givenName' + 'sn'
@@ -116,20 +115,26 @@
              if (typeof displayName == 'undefined' || displayName.getValues().size() < 1) {
                 logger.info("No displayName in LDAP found, creating one");
 
+                # The "addValue()" parameter can be a String or an implementation of IdPAttributeValue: ByteAttributeValue, EmptyAttributeValue, ScopedStringAttributeValue or XMLObjectAttributeValue.
+                # See Doc: https://build.shibboleth.net/nexus/service/local/repositories/site/content/java-identity-provider/4.0.1/apidocs/net/shibboleth/idp/attribute/package-summary.html
+                # XXX.addValue(commonName) == XXX.addValue( String(commonName) )
+                # or
+                # valueType = Java.type("net.shibboleth.idp.attribute.StringAttributeValue");
+                # XXX.addValue(new valueType(commonName))
                 if (commonName != null) {
-                   displayName.addValue(new valueType(commonName));
+                   displayName.addValue(commonName);
                    logger.info('displayName final value: ' + displayName.getValues().get(0));
 
                 } else if (surname != null && gn != null) {
-                   displayName.addValue(new valueType(gn + ' ' + surname));
+                   displayName.addValue(gn + ' ' + surname);
                    logger.info('displayName final value: ' + displayName.getValues().get(0));
 
                 } else if (surname != null) {
-                   displayName.addValue(new valueType(surname));
+                   displayName.addValue(surname);
                    logger.info('displayName final value: ' + displayName.getValues().get(0));
 
                 } else if (gn != null) {
-                   displayName.addValue(new valueType(gn));
+                   displayName.addValue(gn);
                    logger.info('displayName final value: ' + displayName.getValues().get(0));
                 }
 
