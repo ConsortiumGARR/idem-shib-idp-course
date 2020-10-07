@@ -1,8 +1,6 @@
 # Soluzione Google Suite per IdP V4 e Attribute Registry
 
-1. Aggiungere l'attributo "`id`" ad ogni `<bean>` di `relying-party.xml`.
-
-2. Sotto a `<util:list id="shibboleth.RelyingPartyOverrides">` aggiungere il seguente `<bean>`:
+1. Nel `relying-party.xml`, sotto a `<util:list id="shibboleth.RelyingPartyOverrides">` aggiungere il seguente `<bean>`:
    ```xml
    <bean id="Google" parent="RelyingPartyByName" c:relyingPartyIds="google.com">
       <property name="profileConfigurations">
@@ -13,7 +11,7 @@
    </bean>
    ```
 
-3. All'interno della lista `<util:list id="shibboleth.SAML2NameIDGenerators">` inserire:
+2. All'interno della lista `<util:list id="shibboleth.SAML2NameIDGenerators">` inserire:
    ```xml
    <!-- Rilascia a Google un Persistent NameID nel formato "emailAddress" e con valore Gprincipal -->
    <bean parent="shibboleth.SAML2AttributeSourcedGenerator"
@@ -24,7 +22,7 @@
 	    </property>
    </bean>   
 
-4. Creare l'`<AttributeDefinition>` per la generazione della mail di Google (se non presente nella directory LDAP)
+3. Creare l'`<AttributeDefinition>` per la generazione della mail di Google (se non presente nella directory LDAP)
    ```xml
    <AttributeDefinition xsi:type="Template" id="Gprincipal">
       <InputDataConnector ref="myLDAP" attributeNames="uid" />
@@ -35,7 +33,7 @@
       </Template>
    </AttributeDefinition>
 
-5. Creare `/opt/shibboleth-idp/conf/attributes/custom/Gprincipal.properties` in questo modo:
+4. Creare `/opt/shibboleth-idp/conf/attributes/custom/Gprincipal.properties` in questo modo:
    ```xml
    # Gprincipal
 
@@ -49,7 +47,7 @@
    saml1.encodeType=false
    ```
 
-6. Creare i metadata di Google in `/opt/shibboleth-idp/metadata/google-md.xml`:
+5. Creare i metadata di Google in `/opt/shibboleth-idp/metadata/google-md.xml`:
    ```xml
    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
@@ -62,12 +60,12 @@
    </EntityDescriptor>
    ```
    
-7. Aggiungere i metadata di Google a `metadata-providers.xml`:
+6. Aggiungere i metadata di Google a `metadata-providers.xml`:
    ```xml
    <MetadataProvider id="Google”  xsi:type="FilesystemMetadataProvider" metadataFile="%{idp.home}/metadata/google-md.xml"/>
    ```
    
-8. Configurare il rilascio del `Gprincipal` nell'`attribute-filter.xml`:
+7. Configurare il rilascio del `Gprincipal` nell'`attribute-filter.xml`:
    ```xml
    <!-- G Suite (Google Apps)  -->
    <AttributeFilterPolicy id="google.com">
@@ -78,5 +76,5 @@
    </AttributeFilterPolicy>
    ```
 
-9. Provare il rilascio con AACLI:
+8. Provare il rilascio con AACLI:
    `bash /opt/shibboleth-idp/bin/aacli.sh -n <REPLACE_WITH_USERNAME_IDP> -r google.com --saml2`
