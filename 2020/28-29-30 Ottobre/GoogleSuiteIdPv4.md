@@ -11,16 +11,17 @@
    </bean>
    ```
 
-2. All'interno della lista `<util:list id="shibboleth.SAML2NameIDGenerators">` inserire:
+2. All'interno della lista `<util:list id="shibboleth.SAML2NameIDGenerators">` di `saml-nameid.xml` inserire:
    ```xml
-   <!-- Rilascia a Google un Persistent NameID nel formato "emailAddress" e con valore Gprincipal -->
+   <!-- Release to Google an "emailAddress" NameID with the value of Gprincipal -->
    <bean parent="shibboleth.SAML2AttributeSourcedGenerator"
          p:format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
          p:attributeSourceIds="#{ {'Gprincipal'} }">
       <property name="activationCondition">
-	       <bean parent="shibboleth.Conditions.RelyingPartyId" c:candidate="google.com" />
-	    </property>
-   </bean>   
+         <bean parent="shibboleth.Conditions.RelyingPartyId" c:candidate="google.com" />
+      </property>
+   </bean>
+   ```
 
 3. Creare l'`<AttributeDefinition>` per la generazione della mail di Google (se non presente nella directory LDAP)
    ```xml
@@ -32,9 +33,10 @@
          ]]>
       </Template>
    </AttributeDefinition>
+   ```
 
 4. Creare `/opt/shibboleth-idp/conf/attributes/custom/Gprincipal.properties` in questo modo:
-   ```xml
+   ```properties
    # Gprincipal
 
    id=Gprincipal
@@ -47,7 +49,7 @@
    saml1.encodeType=false
    ```
 
-5. Creare i metadata di Google in `/opt/shibboleth-idp/metadata/google-md.xml`:
+5. Creare i metadata di Google in `/opt/shibboleth-idp/metadata/google-md.xml` stando attenti a sostituire "`university.edu`" con il valore corretto per la propria istituzione:
    ```xml
    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
