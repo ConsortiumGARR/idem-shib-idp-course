@@ -30,6 +30,7 @@
 
    <!-- Microsoft custom Persistent ID Generator -->
    <bean parent="shibboleth.SAML2AttributeSourcedGenerator"
+         p:omitQualifiers="true"
          p:format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
          p:attributeSourceIds="#{ {'ImmutableID'} }">
       <property name="activationCondition">
