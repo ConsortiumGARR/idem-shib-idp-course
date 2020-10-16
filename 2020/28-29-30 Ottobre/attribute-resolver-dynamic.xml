@@ -9,6 +9,11 @@
     <!--      Attribute Definitions                 -->
     <!-- ========================================== -->
 
+    <!-- Rinominare Attributi - sAMAccountName > uid -->
+    <AttributeDefinition xsi:type="Simple" id="uid">
+        <InputDataConnector ref="myLDAP" attributeNames="sAMAaccountName" />
+    </AttributeDefinition>
+
     <!-- TEMPLATE: Restituire un displayName personalizzato sulla base di nome e cognome -->
     <AttributeDefinition xsi:type="Template" id="displayName">
         <InputDataConnector ref="myLDAP" attributeNames="sn givenName" />
