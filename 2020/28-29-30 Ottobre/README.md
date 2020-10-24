@@ -85,12 +85,10 @@ per ottenere:
       saml1.encodeType=false
       ```
 
-13) Add the Attribute Filter Rule needed to release the new attribute to your attribute-filter:
+13) Add the required Attribute Filter Rule to release the new attribute to your attribute-filter:
 
     ```xml
-    <AttributeRule attributeID="role">
-       <PermitValueRule xsi:type="AttributeInMetadata" onlyIfRequired="true" />
-    </AttributeRule>
+    <AttributeRule attributeID="role" permitAny="true" />
     ```
 
 14) The custom attribute is released:
