@@ -1,6 +1,6 @@
 # Corso Migrazione a Shibboleth IdP v4
 
-Questo repository contiene esercizi per il Corso Migrazioen a Shibboleth IdP v4 tenuto via Webinar.
+Questo repository contiene esercizi per il Corso Migrazione Shibboleth IdP v4 tenuto via Webinar.
 
 Di seguito la playlist dei 3 giorni di Webinar tenuto:
 
